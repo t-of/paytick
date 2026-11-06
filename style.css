@@ -56,6 +56,7 @@ button { font: inherit; color: inherit; }
 .stage {
   flex: 1;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   touch-action: manipulation;
 }
@@ -69,6 +70,7 @@ button { font: inherit; color: inherit; }
   border-radius: 14px;
   padding: 28px 24px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
 }
 .setup h1 { margin: 0; font-size: 1.6rem; font-weight: 700; }
@@ -76,7 +78,7 @@ button { font: inherit; color: inherit; }
 .field > span:first-child { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.04em; }
 .input-row { display: flex; align-items: baseline; gap: 10px; }
 .input-row input {
-  flex: 1; min-width: 0;
+  flex: 1; min-width: 0; width: 0;
   font-family: var(--font-num); font-weight: 700; font-size: 1.9rem;
   color: var(--fg); background: transparent;
   border: none; border-bottom: 2px solid var(--line); border-radius: 0;
