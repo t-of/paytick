@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="時給と働く時間を入れてスタートすると、稼いだ金額が1秒ごとにカウントアップする秒給メーター。">
+  <title>PAYTICK — 時給を1秒ごとに数える秒給メーター</title>
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PAYTICK">
+  <meta property="og:title" content="PAYTICK — 時給を1秒ごとに数える秒給メーター">
+  <meta property="og:description" content="時給と働く時間を入れてスタートすると、稼いだ金額が1秒ごとにカウントアップする秒給メーター。">
+  <meta property="og:url" content="https://t-of.github.io/paytick/">
+  <meta property="og:image" content="https://t-of.github.io/paytick/icons/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- apple-mobile-web-app-status-bar-style は付けない（black-translucent だと iOS 26 で上部が隠れる） -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PAYTICK">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap">
+  <link rel="stylesheet" href="./webapp-kit/webapp-kit.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="bar">
+      <span class="bar__title">PAYTICK</span>
+      <div class="bar__actions">
+        <button class="pill" id="soundBtn" type="button" aria-pressed="true">音 オン</button>
+        <button class="pill" data-wak="install" hidden>アプリにする</button>
+        <button class="pill" data-wak="share">共有</button>
+      </div>
+    </header>
+
+    <main class="stage">
+      <form class="setup" id="setup" novalidate>
+        <h1>秒給メーター</h1>
+
+        <label class="field">
+          <span>時給</span>
+          <span class="input-row">
+            <input id="wage" type="number" inputmode="numeric" min="1" step="1" value="1200">
+            <span class="unit">円 / 時</span>
+          </span>
+        </label>
+
+        <div class="field" role="group" aria-labelledby="timeLabel">
+          <span id="timeLabel">働く時間</span>
+          <div class="time-row">
+            <label class="input-row">
+              <input id="hours" type="number" inputmode="numeric" min="0" max="24" step="1" value="8" aria-label="時間">
+              <span class="unit">時間</span>
+            </label>
+            <label class="input-row">
+              <input id="minutes" type="number" inputmode="numeric" min="0" max="59" step="1" value="0" aria-label="分">
+              <span class="unit">分</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="preview" id="preview" aria-live="polite"></div>
+        <p class="error" id="error" role="alert" hidden></p>
+
+        <button class="btn-start" type="submit">スタート</button>
+      </form>
+
+      <section class="meter" id="meter" hidden>
+        <div>
+          <div class="label">いまの稼ぎ</div>
+          <div class="money" id="money"><span class="yen">¥</span><span id="moneyInt">0</span><span class="dec" id="moneyDec">.00</span></div>
+        </div>
+        <div>
+          <div class="label">経過時間</div>
+          <div class="clock"><span id="clock">00:00:00</span><span class="of" id="clockOf">/ 08:00:00</span></div>
+        </div>
+        <div class="rail" role="progressbar" aria-label="ゴールまで" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="rail"><div id="bar"></div></div>
+        <div class="facts">
+          <span>秒給 <b id="perSec">0</b> 円</span>
+          <span>時給 <b id="perHour">0</b> 円</span>
+          <span>ゴール <b id="goal">0</b> 円</span>
+        </div>
+        <div class="done-badge" id="done" hidden>おつかれさまでした</div>
+        <div class="controls">
+          <button type="button" id="pause">一時停止</button>
+          <button type="button" id="shareResult" hidden>共有</button>
+          <button type="button" id="back">最初に戻る</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="credit">
+      <a href="/">T.OF...</a> ・ <a href="https://t-of.github.io/contact/">問い合わせ</a> ・ <span class="ver">v1</span>
+    </footer>
+  </div>
+
+  <script src="./webapp-kit/webapp-kit.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>

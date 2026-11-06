@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "PAYTICK — 時給を1秒ごとに数える秒給メーター",
+  "short_name": "PAYTICK",
+  "description": "時給と働く時間を入れてスタートすると、稼いだ金額が1秒ごとにカウントアップする秒給メーター。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "lang": "ja",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

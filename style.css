@@ -1,0 +1,161 @@
+/* 1 画面のタクシーメーター風。大きな金額、その下に時間、細い進み具合のレール */
+:root {
+  --bg: #ffffff;
+  --fg: #000000;
+  --muted: #555555;
+  --line: #dddddd;
+  --accent: #000000;
+  --accent-soft: #f3f3f3;
+  --error: #c0392b;
+  --font-ui: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --font-num: "Azeret Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+/* Safari 26 の上下バーの色は html の背景から取られる。body と同じ色にしておく */
+html { background-color: var(--bg); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-ui);
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+/* 画面の端に置くものはセーフエリアの分だけ内側に。高さは 100vh ではなく 100dvh */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+}
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.bar__title { font-family: var(--font-num); font-weight: 800; font-size: 16px; letter-spacing: 0.08em; }
+.bar__actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.pill {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: 999px;
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.pill[aria-pressed="false"] { color: var(--muted); }
+
+.stage {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  touch-action: manipulation;
+}
+.stage > * { width: 100%; max-width: 1100px; }
+
+/* ---------- はじめの画面 ---------- */
+.setup {
+  max-width: 440px;
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: grid;
+  gap: 22px;
+}
+.setup h1 { margin: 0; font-size: 1.6rem; font-weight: 700; }
+.field { display: grid; gap: 8px; }
+.field > span:first-child { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.04em; }
+.input-row { display: flex; align-items: baseline; gap: 10px; }
+.input-row input {
+  flex: 1; min-width: 0;
+  font-family: var(--font-num); font-weight: 700; font-size: 1.9rem;
+  color: var(--fg); background: transparent;
+  border: none; border-bottom: 2px solid var(--line); border-radius: 0;
+  padding: 4px 2px; outline: none;
+  font-variant-numeric: tabular-nums;
+}
+.input-row input:focus { border-bottom-color: var(--accent); }
+.input-row .unit { font-size: 1rem; color: var(--muted); white-space: nowrap; }
+.time-row { display: flex; gap: 16px; }
+.time-row .input-row { flex: 1; }
+.preview {
+  background: var(--accent-soft);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: grid; gap: 4px;
+  font-size: 0.9rem;
+}
+.preview b { font-family: var(--font-num); font-weight: 700; font-variant-numeric: tabular-nums; }
+.error { color: var(--error); font-size: 0.88rem; margin: -8px 0 0; }
+
+.setup button, .controls button {
+  font-family: var(--font-ui); font-weight: 700; cursor: pointer;
+  border-radius: 10px; border: 1px solid transparent;
+}
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.btn-start {
+  background: var(--accent); color: var(--bg);
+  font-size: 1.25rem; padding: 16px; letter-spacing: 0.2em;
+}
+
+/* ---------- メーターの画面 ---------- */
+.meter { display: grid; gap: clamp(20px, 4vh, 40px); text-align: center; user-select: none; -webkit-user-select: none; }
+.label { font-size: clamp(0.85rem, 1.6vw, 1.05rem); color: var(--muted); letter-spacing: 0.18em; }
+.money {
+  font-family: var(--font-num); font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1; white-space: nowrap;
+  font-size: clamp(2.6rem, 13vw, 11rem);
+  letter-spacing: -0.03em;
+}
+.money .yen { font-size: 0.5em; margin-right: 0.08em; }
+.money .dec { font-size: 0.42em; color: var(--muted); }
+.clock {
+  font-family: var(--font-num); font-weight: 700;
+  font-variant-numeric: tabular-nums; line-height: 1;
+  font-size: clamp(2rem, 7vw, 5.5rem);
+}
+.clock .of { font-size: 0.35em; color: var(--muted); font-weight: 500; margin-left: 0.4em; }
+.rail {
+  height: 8px; border-radius: 4px; background: var(--line); overflow: hidden;
+  max-width: 760px; width: 100%; margin: 0 auto;
+}
+.rail > div { height: 100%; width: 0; background: var(--accent); transition: width 0.4s linear; }
+.facts {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 28px;
+  color: var(--muted); font-size: 0.95rem;
+}
+.facts b { color: var(--fg); font-family: var(--font-num); font-weight: 700; font-variant-numeric: tabular-nums; }
+.done-badge {
+  justify-self: center;
+  background: var(--accent); color: var(--bg);
+  padding: 8px 20px; border-radius: 999px; font-weight: 700; letter-spacing: 0.1em;
+}
+.controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.controls button {
+  background: transparent; border-color: var(--line);
+  min-height: 48px; padding: 0 22px; font-size: 1rem; min-width: 130px;
+}
+
+.credit { text-align: center; font-size: 12px; color: var(--muted); }
+.credit a { color: inherit; }
+
+.tick { animation: tick 0.35s ease-out; }
+@keyframes tick { from { opacity: 0.55; } to { opacity: 1; } }
+@media (hover: hover) {
+  .btn-start:hover { opacity: 0.85; }
+  .controls button:hover, .pill:hover { border-color: var(--accent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tick { animation: none; }
+  .rail > div { transition: none; }
+}
